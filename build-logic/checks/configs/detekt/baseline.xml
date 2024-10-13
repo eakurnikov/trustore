@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>FunctionNaming:CommandsTest.kt$CommandsTest$@Test fun `when committing a transaction - then changes are persisted`()</ID>
+    <ID>FunctionNaming:CommandsTest.kt$CommandsTest$@Test fun `when counting occurrences of a value - then the correct count is returned`()</ID>
+    <ID>FunctionNaming:CommandsTest.kt$CommandsTest$@Test fun `when deleting a value - then the key is no longer set`()</ID>
+    <ID>FunctionNaming:CommandsTest.kt$CommandsTest$@Test fun `when rolling back a transaction - then state is restored to previous snapshot`()</ID>
+    <ID>FunctionNaming:CommandsTest.kt$CommandsTest$@Test fun `when setting and getting a value - then the correct value is returned`()</ID>
+    <ID>FunctionNaming:CommandsTest.kt$CommandsTest$@Test fun `when using nested transactions - then only inner transactions are rolled back or committed`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when a snapshot is applied multiple times - then the store remains consistent`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when applying a snapshot - then the store is restored to that state`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when applying an empty snapshot - then the store becomes empty`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when counting occurrences of a value - then the correct count is returned`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when counting values in an empty store - then the count is zero`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when creating a snapshot - then the store state is preserved`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when deleting a key - then it can no longer be retrieved`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when deleting a non-existent key - then it does not affect the store`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when deleting all keys - then the store becomes empty`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when retrieving a non-existent key - then it returns null`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when setting a key to the same value multiple times - then the count reflects all occurrences`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when setting a value - then it can be retrieved`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when setting a value twice - then it overwrites the previous value`()</ID>
+    <ID>FunctionNaming:StoreImplTest.kt$StoreImplTest$@Test fun `when setting multiple values - then they can all be retrieved`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when all transactions are committed - then no transactions remain`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when all transactions are rolled back - then store returns to original state`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when begin is called - then transaction starts successfully`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when checking isInTransaction - then returns false if not in transaction`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when checking isInTransaction - then returns true if in transaction`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when command is executed with read access - then correct value is returned`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when command is executed with write access - then store state is updated`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when commit is called with active transaction - then it commits successfully`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when commit is called with no transactions - then returns false`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when multiple transactions are active - then commit affects only the current one`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when multiple transactions are active - then rollback affects only the current one`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when rollback is called with active transaction - then state is restored to previous snapshot`()</ID>
+    <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when rollback is called with no transactions - then returns false`()</ID>
+    <ID>MagicNumber:InputHandler.kt$InputHandler$3</ID>
+    <ID>MagicNumber:StoreImplTest.kt$StoreImplTest$3</ID>
+    <ID>UnusedPrivateProperty:build.gradle.kts$val commonMain by getting { dependencies { implementation(projects.trustoreApi) implementation(libs.kotlin.coroutines.core) implementation(libs.kotlin.collections.immutable) } }</ID>
+    <ID>UnusedPrivateProperty:build.gradle.kts$val commonTest by getting { dependencies { implementation(libs.test.kotlin) implementation(libs.test.kotlin.coroutines) } }</ID>
+    <ID>UnusedPrivateProperty:convention.kotlin-multiplatform-library.gradle.kts$val commonMain by getting</ID>
+    <ID>UnusedPrivateProperty:convention.kotlin-multiplatform-library.gradle.kts$val commonTest by getting</ID>
+  </CurrentIssues>
+</SmellBaseline>
