@@ -1,0 +1,17 @@
+root = true
+
+# See detekt/config.yml, values should be the same
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 120
+
+ij_kotlin_imports_layout = *, java.**, javax.**, kotlin.**, ^
+
+[{*.kt, *.kts, *.gradle.kts, *.simple.kts, *.test.kts}]
+ij_kotlin_name_count_to_use_star_import = 2147483647
+ij_kotlin_name_count_to_use_star_import_for_members = 2147483647
