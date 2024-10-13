@@ -9,7 +9,6 @@ pluginManagement {
 
 plugins {
     id("convention.repositories")
-    id("convention.scan")
 }
 
 include(":app")
