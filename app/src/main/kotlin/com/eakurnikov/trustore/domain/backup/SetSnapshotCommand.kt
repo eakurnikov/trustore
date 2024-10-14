@@ -9,11 +9,19 @@ class SetSnapshotCommand(
 ) : WriteCommand {
 
     override suspend fun execute(store: Store.Write): CommandResult<Unit> {
-        store.applySnapshot(BackupSnapshot(snapshot.content))
-        return CommandResult(
-            status = CommandResult.Status.SUCCESS,
-            value = Unit,
-            error = null
-        )
+        return try {
+            store.applySnapshot(BackupSnapshot(snapshot.content))
+            CommandResult(
+                status = CommandResult.Status.SUCCESS,
+                value = Unit,
+                error = null
+            )
+        } catch (e: Throwable) {
+            CommandResult(
+                status = CommandResult.Status.ERROR,
+                value = null,
+                error = e
+            )
+        }
     }
 }

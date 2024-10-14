@@ -3,7 +3,9 @@ package com.eakurnikov.trustore.domain.backup
 import com.eakurnikov.trustore.api.CommandResult
 import com.eakurnikov.trustore.api.Trustore
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -11,22 +13,18 @@ class BackupManager @Inject constructor(
     private val trustore: Trustore,
     private val storage: BackupStorage
 ) {
-    private val scope: CoroutineScope = GlobalScope
+    private val backupScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     fun onInit() {
-        scope.launch {
-            android.util.Log.i("TRATATA", "BackupManager onInit")
-            val restoredBackup: BackupSnapshot? = storage.restoreBackup()
-            restoredBackup?.let {
-                trustore.command(SetSnapshotCommand(it))
-                android.util.Log.i("TRATATA", "BackupManager onInit restored")
+        backupScope.launch {
+            storage.restoreBackup().onSuccess { restoredBackup: BackupSnapshot? ->
+                restoredBackup?.let { trustore.command(SetSnapshotCommand(it)) }
             }
         }
     }
 
     fun onLowMemory() {
-        scope.launch {
-            android.util.Log.i("TRATATA", "BackupManager onLowMemory")
+        backupScope.launch {
             val result: CommandResult<Any?> = trustore.command(GetSnapshotCommand())
             val content: Any? = result.value
 
@@ -34,8 +32,11 @@ class BackupManager @Inject constructor(
                 content is BackupSnapshot
             ) {
                 storage.saveBackup(content)
-                android.util.Log.i("TRATATA", "BackupManager onLowMemory saved")
             }
         }
+    }
+
+    fun onTerminate() {
+        backupScope.cancel()
     }
 }

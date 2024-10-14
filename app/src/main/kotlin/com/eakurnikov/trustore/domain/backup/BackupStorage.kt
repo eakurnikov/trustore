@@ -12,26 +12,32 @@ class BackupStorage @Inject constructor(
     private val context: Context
 ) {
     private val backupFile: File
-        get() = File(context.filesDir, "backup.json")
+        get() = File(context.filesDir, BACKUP_FILE_NAME)
 
-    suspend fun saveBackup(snapshot: BackupSnapshot) {
-        val backup = Backup(snapshot.content)
-        val jsonString: String = Json.encodeToString(backup)
-
-        withContext(Dispatchers.IO) {
-            backupFile.writeText(jsonString)
+    suspend fun saveBackup(snapshot: BackupSnapshot): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            runCatching {
+                val backup = Backup(snapshot.content)
+                val jsonString: String = Json.encodeToString(backup)
+                backupFile.writeText(jsonString)
+            }
         }
     }
 
-    suspend fun restoreBackup(): BackupSnapshot? {
+    suspend fun restoreBackup(): Result<BackupSnapshot?> {
         return withContext(Dispatchers.IO) {
             if (!backupFile.exists()) {
-                return@withContext null
+                return@withContext Result.success(null)
             }
-
-            val jsonString: String = backupFile.readText()
-            val backup: Backup = Json.decodeFromString<Backup>(jsonString)
-            BackupSnapshot(backup.map)
+            runCatching {
+                val jsonString: String = backupFile.readText()
+                val backup: Backup = Json.decodeFromString<Backup>(jsonString)
+                BackupSnapshot(backup.map)
+            }
         }
+    }
+
+    private companion object {
+        const val BACKUP_FILE_NAME = "trustore-backup.json"
     }
 }

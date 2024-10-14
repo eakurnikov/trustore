@@ -18,7 +18,6 @@ dependencies {
     implementation(projects.trustoreApi)
     implementation(projects.trustoreImpl)
     implementation(projects.trustoreExt)
-    implementation(projects.trustorePersistence)
 
     implementation(libs.kotlin.coroutines.core)
     implementation(libs.kotlin.serialization.json)

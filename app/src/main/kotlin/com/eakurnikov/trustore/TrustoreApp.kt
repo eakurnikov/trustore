@@ -1,6 +1,7 @@
 package com.eakurnikov.trustore
 
 import android.app.Application
+import android.content.ComponentCallbacks2
 import android.os.Handler
 import android.os.Looper
 import com.eakurnikov.trustore.di.AppComponent
@@ -25,19 +26,29 @@ class TrustoreApp : Application() {
             .appModule(AppModule(this))
             .trustoreModule(TrustoreModule(::TrustoreDependencies, ::TrustoreBuilder))
             .build()
-        appComponent.inject(this)
+            .also { it.inject(this@TrustoreApp) }
 
         backupManager.onInit()
 
-        Handler(Looper.getMainLooper()).postDelayed(
-            {
-                backupManager.onLowMemory()
-            },
-            15000
-        )
+        forceOnTrimMemory()
     }
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND) {
+            backupManager.onLowMemory()
+        }
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        backupManager.onTerminate()
+    }
+
+    private fun forceOnTrimMemory() {
+        Handler(Looper.getMainLooper()).postDelayed(
+            { onTrimMemory(ComponentCallbacks2.TRIM_MEMORY_BACKGROUND) },
+            15_000
+        )
     }
 }
