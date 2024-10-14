@@ -16,6 +16,14 @@ class TrustoreStubDependencies : Trustore.Dependencies {
 
     private val storeStub: Store = object : Store {
 
+        private val storeSnapshotStub = object : Store.Snapshot {
+            override val content: Map<String, String> = emptyMap()
+            override fun set(key: String, value: String): Store.Snapshot = this
+            override fun get(key: String): String? = null
+            override fun delete(key: String): Store.Snapshot = this
+            override fun count(value: String): Int = 0
+        }
+
         private val storeReadStub: Store.Read = object : Store.Read {
             override suspend fun get(key: String): String? = null
             override suspend fun count(value: String): Int = 0
@@ -24,13 +32,6 @@ class TrustoreStubDependencies : Trustore.Dependencies {
         private val storeWriteStub: Store.Write = object : Store.Write, Store.Read by storeReadStub {
             override suspend fun set(key: String, value: String) = Unit
             override suspend fun delete(key: String) = Unit
-        }
-
-        private val storeSnapshotStub = object : Store.Snapshot {
-            override fun set(key: String, value: String): Store.Snapshot = this
-            override fun get(key: String): String? = null
-            override fun delete(key: String): Store.Snapshot = this
-            override fun count(value: String): Int = 0
         }
 
         override val withReadAccess: Store.Read = storeReadStub

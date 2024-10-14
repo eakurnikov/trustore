@@ -12,7 +12,7 @@ interface ControlCommand {
 }
 
 interface ReadCommand {
-    suspend fun execute(store: Store.Read): CommandResult<String?>
+    suspend fun execute(store: Store.Read): CommandResult<Any?>
 }
 
 interface WriteCommand {

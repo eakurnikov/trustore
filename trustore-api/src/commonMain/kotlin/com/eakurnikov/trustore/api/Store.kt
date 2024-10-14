@@ -10,6 +10,7 @@ interface Store {
     interface Read {
         suspend fun get(key: String): String?
         suspend fun count(value: String): Int
+        suspend fun snapshot(): Snapshot
     }
 
     interface Write : Read {

@@ -42,7 +42,7 @@ object Commands {
         private val key: String
     ) : ReadCommand {
 
-        override suspend fun execute(store: Store.Read): CommandResult<String?> {
+        override suspend fun execute(store: Store.Read): CommandResult<Any?> {
             return when (val result: String? = store.get(key)) {
                 null -> failure()
                 else -> success(result)
@@ -54,7 +54,7 @@ object Commands {
         private val value: String
     ) : ReadCommand {
 
-        override suspend fun execute(store: Store.Read): CommandResult<String?> {
+        override suspend fun execute(store: Store.Read): CommandResult<Any?> {
             return success(store.count(value).toString())
         }
     }

@@ -26,7 +26,7 @@ internal class TrustoreImpl(
         }
     }
 
-    override suspend fun command(command: ReadCommand): CommandResult<String?> {
+    override suspend fun command(command: ReadCommand): CommandResult<Any?> {
         return mutex.withLock {
             safeExecute {
                 command.execute(store.withReadAccess)

@@ -14,7 +14,7 @@ class TrustoreStubBuilder : Trustore.Builder {
         error = null
     )
 
-    private val resultStringStub = CommandResult<String?>(
+    private val resultStringStub = CommandResult<Any?>(
         status = CommandResult.Status.FAILURE,
         value = null,
         error = null
@@ -22,7 +22,7 @@ class TrustoreStubBuilder : Trustore.Builder {
 
     private val trustoreStub = object : Trustore {
         override suspend fun command(command: ControlCommand): CommandResult<Unit> = resultUnitStub
-        override suspend fun command(command: ReadCommand): CommandResult<String?> = resultStringStub
+        override suspend fun command(command: ReadCommand): CommandResult<Any?> = resultStringStub
         override suspend fun command(command: WriteCommand): CommandResult<Unit> = resultUnitStub
     }
 

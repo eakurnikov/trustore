@@ -44,10 +44,10 @@ class InputHandler @Inject constructor(
             return Texts.Responses.GET_USAGE_ERROR
         }
         val key: String = input[1]
-        val result: CommandResult<String?> = trustore.command(Commands.Get(key))
+        val result: CommandResult<Any?> = trustore.command(Commands.Get(key))
 
         return when (result.status) {
-            CommandResult.Status.SUCCESS -> result.value
+            CommandResult.Status.SUCCESS -> result.value.toString()
             CommandResult.Status.FAILURE -> Texts.Responses.KEY_NOT_SET_FAILURE
             CommandResult.Status.ERROR -> Texts.Responses.operationError(result.error)
         }
@@ -71,10 +71,10 @@ class InputHandler @Inject constructor(
             return Texts.Responses.COUNT_USAGE_ERROR
         }
         val value: String = input[1]
-        val result: CommandResult<String?> = trustore.command(Commands.Count(value))
+        val result: CommandResult<Any?> = trustore.command(Commands.Count(value))
 
         return when (result.status) {
-            CommandResult.Status.SUCCESS -> result.value
+            CommandResult.Status.SUCCESS -> result.value.toString()
             else -> Texts.Responses.operationError(result.error)
         }
     }
