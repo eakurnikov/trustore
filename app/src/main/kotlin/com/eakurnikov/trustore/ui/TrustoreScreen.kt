@@ -36,12 +36,12 @@ fun TrustoreScreen(
     modifier: Modifier = Modifier,
     viewModel: TrustoreViewModel
 ) {
-    val commands: List<String> = viewModel.commands
+    val lines: List<String> = viewModel.lines
     var input by remember { mutableStateOf(TextFieldValue("")) }
     val focusManager = LocalFocusManager.current
 
     fun onSubmitInput() {
-        viewModel.onCommand(input.text)
+        viewModel.onInputSubmitted(input.text)
         input = TextFieldValue("")
         focusManager.clearFocus()
     }
@@ -59,7 +59,7 @@ fun TrustoreScreen(
                 .padding(8.dp),
             reverseLayout = true
         ) {
-            items(commands.reversed()) { command: String ->
+            items(lines.reversed()) { command: String ->
                 Text(
                     modifier = Modifier.padding(8.dp),
                     style = MaterialTheme.typography.bodyLarge,

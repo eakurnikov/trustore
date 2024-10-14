@@ -12,20 +12,20 @@ class TrustoreViewModel @Inject constructor(
     private val inputHandler: InputHandler
 ) : ViewModel() {
 
-    val commands: SnapshotStateList<String> = mutableStateListOf()
+    val lines: SnapshotStateList<String> = mutableStateListOf()
 
-    fun onCommand(input: String) {
+    fun onInputSubmitted(input: String) {
         if (input.isBlank()) {
             return
         }
         viewModelScope.launch {
             try {
-                commands += Texts.Responses.logInput(input)
-                inputHandler.onInput(input)?.let { result: String ->
-                    commands += result
+                lines += Texts.Responses.logInput(input)
+                inputHandler.handleInput(input)?.let { output: String ->
+                    lines += output
                 }
             } catch (e: Throwable) {
-                commands += Texts.Responses.operationError(e)
+                lines += Texts.Responses.operationError(e)
             }
         }
     }
