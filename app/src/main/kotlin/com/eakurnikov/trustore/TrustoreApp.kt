@@ -26,7 +26,7 @@ class TrustoreApp : Application() {
             .appModule(AppModule(this))
             .trustoreModule(TrustoreModule(::TrustoreDependencies, ::TrustoreBuilder))
             .build()
-            .also { it.inject(this@TrustoreApp) }
+            .apply { inject(this@TrustoreApp) }
 
         backupManager.onInit()
 
@@ -38,11 +38,6 @@ class TrustoreApp : Application() {
         if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND) {
             backupManager.onLowMemory()
         }
-    }
-
-    override fun onTerminate() {
-        super.onTerminate()
-        backupManager.onTerminate()
     }
 
     private fun forceOnTrimMemory() {

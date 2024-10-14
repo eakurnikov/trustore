@@ -35,8 +35,4 @@ class BackupManager @Inject constructor(
             }
         }
     }
-
-    fun onTerminate() {
-        backupScope.cancel()
-    }
 }
