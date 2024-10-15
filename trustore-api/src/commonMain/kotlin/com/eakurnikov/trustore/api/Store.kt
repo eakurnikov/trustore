@@ -18,6 +18,7 @@ interface Store {
     }
 
     interface Snapshot {
+        val content: Map<String, String>
         fun set(key: String, value: String): Snapshot
         fun get(key: String): String?
         fun delete(key: String): Snapshot

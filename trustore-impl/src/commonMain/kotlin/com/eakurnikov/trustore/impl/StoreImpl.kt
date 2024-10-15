@@ -37,12 +37,17 @@ internal class StoreImpl : Store, Store.Read, Store.Write {
     }
 
     override suspend fun applySnapshot(snapshot: Store.Snapshot) {
-        current = snapshot
+        current = when (snapshot) {
+            is SnapshotImpl -> snapshot
+            else -> SnapshotImpl(persistentHashMapOf<String, String>().putAll(snapshot.content))
+        }
     }
 
     private class SnapshotImpl(
         private val map: PersistentMap<String, String>
     ) : Store.Snapshot {
+
+        override val content: Map<String, String> by lazy { map.toMap() }
 
         override fun set(key: String, value: String): Store.Snapshot {
             return SnapshotImpl(map.put(key, value))
