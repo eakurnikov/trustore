@@ -8,22 +8,22 @@ import com.eakurnikov.trustore.api.WriteCommand
 
 class TrustoreStubBuilder : Trustore.Builder {
 
-    private val resultUnitStub = CommandResult<Unit>(
+    private val resultUnitStub = CommandResult(
         status = CommandResult.Status.FAILURE,
         value = null,
         error = null
     )
 
-    private val resultStringStub = CommandResult<Any?>(
+    private val resultStringStub = CommandResult(
         status = CommandResult.Status.FAILURE,
         value = null,
         error = null
     )
 
     private val trustoreStub = object : Trustore {
-        override suspend fun command(command: ControlCommand): CommandResult<Unit> = resultUnitStub
-        override suspend fun command(command: ReadCommand): CommandResult<Any?> = resultStringStub
-        override suspend fun command(command: WriteCommand): CommandResult<Unit> = resultUnitStub
+        override suspend fun command(command: ControlCommand): CommandResult = resultUnitStub
+        override suspend fun command(command: ReadCommand): CommandResult = resultStringStub
+        override suspend fun command(command: WriteCommand): CommandResult = resultUnitStub
     }
 
     override fun dependencies(dependencies: Trustore.Dependencies): Trustore.Builder = this

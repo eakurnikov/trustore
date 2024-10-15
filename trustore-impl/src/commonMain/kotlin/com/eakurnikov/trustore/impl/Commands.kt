@@ -12,7 +12,7 @@ import com.eakurnikov.trustore.impl.util.success
 object Commands {
 
     object Begin : ControlCommand {
-        override suspend fun execute(transactions: Transactions): CommandResult<Unit> {
+        override suspend fun execute(transactions: Transactions): CommandResult {
             return when (transactions.begin()) {
                 true -> success()
                 else -> failure()
@@ -21,7 +21,7 @@ object Commands {
     }
 
     object Commit : ControlCommand {
-        override suspend fun execute(transactions: Transactions): CommandResult<Unit> {
+        override suspend fun execute(transactions: Transactions): CommandResult {
             return when (transactions.commit()) {
                 true -> success()
                 else -> failure()
@@ -30,7 +30,7 @@ object Commands {
     }
 
     object Rollback : ControlCommand {
-        override suspend fun execute(transactions: Transactions): CommandResult<Unit> {
+        override suspend fun execute(transactions: Transactions): CommandResult {
             return when (transactions.rollback()) {
                 true -> success()
                 else -> failure()
@@ -42,7 +42,7 @@ object Commands {
         private val key: String
     ) : ReadCommand {
 
-        override suspend fun execute(store: Store.Read): CommandResult<Any?> {
+        override suspend fun execute(store: Store.Read): CommandResult {
             return when (val result: String? = store.get(key)) {
                 null -> failure()
                 else -> success(result)
@@ -54,7 +54,7 @@ object Commands {
         private val value: String
     ) : ReadCommand {
 
-        override suspend fun execute(store: Store.Read): CommandResult<Any?> {
+        override suspend fun execute(store: Store.Read): CommandResult {
             return success(store.count(value).toString())
         }
     }
@@ -63,7 +63,7 @@ object Commands {
         private val key: String
     ) : WriteCommand {
 
-        override suspend fun execute(store: Store.Write): CommandResult<Unit> {
+        override suspend fun execute(store: Store.Write): CommandResult {
             return success(store.delete(key))
         }
     }
@@ -73,7 +73,7 @@ object Commands {
         private val value: String
     ) : WriteCommand {
 
-        override suspend fun execute(store: Store.Write): CommandResult<Unit> {
+        override suspend fun execute(store: Store.Write): CommandResult {
             return success(store.set(key, value))
         }
     }

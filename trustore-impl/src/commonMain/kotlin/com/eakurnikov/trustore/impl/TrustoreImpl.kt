@@ -18,7 +18,7 @@ internal class TrustoreImpl(
 
     private val mutex = Mutex()
 
-    override suspend fun command(command: ControlCommand): CommandResult<Unit> {
+    override suspend fun command(command: ControlCommand): CommandResult {
         return mutex.withLock {
             safeExecute {
                 command.execute(transactions)
@@ -26,7 +26,7 @@ internal class TrustoreImpl(
         }
     }
 
-    override suspend fun command(command: ReadCommand): CommandResult<Any?> {
+    override suspend fun command(command: ReadCommand): CommandResult {
         return mutex.withLock {
             safeExecute {
                 command.execute(store.withReadAccess)
@@ -34,7 +34,7 @@ internal class TrustoreImpl(
         }
     }
 
-    override suspend fun command(command: WriteCommand): CommandResult<Unit> {
+    override suspend fun command(command: WriteCommand): CommandResult {
         return mutex.withLock {
             safeExecute {
                 command.execute(store.withWriteAccess)
@@ -42,7 +42,7 @@ internal class TrustoreImpl(
         }
     }
 
-    private inline fun <T> safeExecute(block: () -> CommandResult<T>): CommandResult<T> {
+    private inline fun safeExecute(block: () -> CommandResult): CommandResult {
         return try {
             block()
         } catch (e: Throwable) {

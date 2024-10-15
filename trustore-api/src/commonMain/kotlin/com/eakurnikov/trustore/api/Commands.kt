@@ -8,13 +8,13 @@ package com.eakurnikov.trustore.api
  */
 
 interface ControlCommand {
-    suspend fun execute(transactions: Transactions): CommandResult<Unit>
+    suspend fun execute(transactions: Transactions): CommandResult
 }
 
 interface ReadCommand {
-    suspend fun execute(store: Store.Read): CommandResult<Any?>
+    suspend fun execute(store: Store.Read): CommandResult
 }
 
 interface WriteCommand {
-    suspend fun execute(store: Store.Write): CommandResult<Unit>
+    suspend fun execute(store: Store.Write): CommandResult
 }
