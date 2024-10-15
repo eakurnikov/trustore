@@ -1,9 +1,9 @@
 package com.eakurnikov.trustore.api
 
 interface Trustore {
-    suspend fun command(command: ControlCommand): CommandResult<Unit>
-    suspend fun command(command: ReadCommand): CommandResult<String?>
-    suspend fun command(command: WriteCommand): CommandResult<Unit>
+    suspend fun command(command: ControlCommand): CommandResult
+    suspend fun command(command: ReadCommand): CommandResult
+    suspend fun command(command: WriteCommand): CommandResult
 
     interface Dependencies {
         fun store(): Store

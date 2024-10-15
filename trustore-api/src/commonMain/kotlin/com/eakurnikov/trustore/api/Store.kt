@@ -4,12 +4,12 @@ interface Store {
     val withReadAccess: Read
     val withWriteAccess: Write
 
-    suspend fun snapshot(): Snapshot
     suspend fun applySnapshot(snapshot: Snapshot)
 
     interface Read {
         suspend fun get(key: String): String?
         suspend fun count(value: String): Int
+        suspend fun snapshot(): Snapshot
     }
 
     interface Write : Read {

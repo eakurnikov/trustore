@@ -28,8 +28,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.eakurnikov.trustore.domain.InputHandler
+import com.eakurnikov.trustore.domain.InputHandlerImpl
+import com.eakurnikov.trustore.domain.backup.BackupEvent
+import com.eakurnikov.trustore.domain.backup.BackupManager
+import com.eakurnikov.trustore.domain.backup.BackupStorage
+import com.eakurnikov.trustore.domain.backup.SnapshotImpl
 import com.eakurnikov.trustore.ext.stub.TrustoreStubBuilder
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
 fun TrustoreScreen(
@@ -109,6 +115,20 @@ fun TrustoreScreen(
 fun TrustoreScreenPreview() {
     TrustoreAppBar()
     TrustoreScreen(
-        viewModel = TrustoreViewModel(InputHandler(TrustoreStubBuilder().create()))
+        viewModel = TrustoreViewModel(
+            backupManager = object : BackupManager {
+                override val events: SharedFlow<BackupEvent> = MutableSharedFlow()
+                override fun onInit() = Unit
+                override fun onLowMemory() = Unit
+            },
+            inputHandler = InputHandlerImpl(
+                trustore = TrustoreStubBuilder().create(),
+                backupStorage = object : BackupStorage {
+                    override suspend fun saveBackup(snapshot: SnapshotImpl): Result<Unit> = Result.success(Unit)
+                    override suspend fun retrieveBackup(): Result<SnapshotImpl?> = Result.success(null)
+                    override suspend fun dropBackup(): Result<Boolean> = Result.success(false)
+                }
+            )
+        )
     )
 }

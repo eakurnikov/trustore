@@ -2,14 +2,24 @@ package com.eakurnikov.trustore.domain
 
 import com.eakurnikov.trustore.api.CommandResult
 import com.eakurnikov.trustore.api.Trustore
+import com.eakurnikov.trustore.domain.backup.BackupStorage
+import com.eakurnikov.trustore.domain.backup.CustomCommands
 import com.eakurnikov.trustore.impl.Commands
-import com.eakurnikov.trustore.ui.Texts
+import com.eakurnikov.trustore.ui.texts.Texts
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class InputHandler @Inject constructor(
-    private val trustore: Trustore
-) {
-    suspend fun handleInput(input: String): String? {
+interface InputHandler {
+    suspend fun handleInput(input: String): InputEvent
+}
+
+@Singleton
+class InputHandlerImpl @Inject constructor(
+    private val trustore: Trustore,
+    private val backupStorage: BackupStorage
+) : InputHandler {
+
+    override suspend fun handleInput(input: String): InputEvent {
         val parts: List<String> = input.trim().split("\\s+".toRegex())
         val command: String = parts[0]
 
@@ -21,90 +31,83 @@ class InputHandler @Inject constructor(
             Texts.CommandNames.BEGIN -> onCommandBegin()
             Texts.CommandNames.COMMIT -> onCommandCommit()
             Texts.CommandNames.ROLLBACK -> onCommandRollback()
-            else -> Texts.Responses.unknownCommandError(command)
+            Texts.CommandNames.SAVE -> onCommandSave()
+            Texts.CommandNames.CLEAR -> onCommandClear()
+            Texts.CommandNames.RESTORE -> onCommandRestore()
+            Texts.CommandNames.DROP -> onCommandDrop()
+            else -> InputEvent.CommandUnknown(command)
         }
     }
 
-    private suspend fun onCommandSet(input: List<String>): String? {
+    private suspend fun onCommandSet(input: List<String>): InputEvent {
         if (input.size < 3) {
-            return Texts.Responses.SET_USAGE_ERROR
+            return InputEvent.CommandUsageError(Texts.CommandNames.SET)
         }
         val key: String = input[1]
         val value: String = input[2]
-        val result: CommandResult<Unit> = trustore.command(Commands.Set(key, value))
-
-        return when (result.status) {
-            CommandResult.Status.SUCCESS -> null
-            else -> Texts.Responses.operationError(result.error)
-        }
+        val result: CommandResult = trustore.command(Commands.Set(key, value))
+        return InputEvent.CommandExecuted(Texts.CommandNames.SET, result)
     }
 
-    private suspend fun onCommandGet(input: List<String>): String? {
+    private suspend fun onCommandGet(input: List<String>): InputEvent {
         if (input.size < 2) {
-            return Texts.Responses.GET_USAGE_ERROR
+            return InputEvent.CommandUsageError(Texts.CommandNames.GET)
         }
         val key: String = input[1]
-        val result: CommandResult<String?> = trustore.command(Commands.Get(key))
-
-        return when (result.status) {
-            CommandResult.Status.SUCCESS -> result.value
-            CommandResult.Status.FAILURE -> Texts.Responses.KEY_NOT_SET_FAILURE
-            CommandResult.Status.ERROR -> Texts.Responses.operationError(result.error)
-        }
+        val result: CommandResult = trustore.command(Commands.Get(key))
+        return InputEvent.CommandExecuted(Texts.CommandNames.GET, result)
     }
 
-    private suspend fun onCommandDelete(input: List<String>): String? {
+    private suspend fun onCommandDelete(input: List<String>): InputEvent {
         if (input.size < 2) {
-            return Texts.Responses.DELETE_USAGE_ERROR
+            return InputEvent.CommandUsageError(Texts.CommandNames.DELETE)
         }
         val key: String = input[1]
-        val result: CommandResult<Unit> = trustore.command(Commands.Delete(key))
-
-        return when (result.status) {
-            CommandResult.Status.SUCCESS -> null
-            else -> Texts.Responses.operationError(result.error)
-        }
+        val result: CommandResult = trustore.command(Commands.Delete(key))
+        return InputEvent.CommandExecuted(Texts.CommandNames.DELETE, result)
     }
 
-    private suspend fun onCommandCount(input: List<String>): String? {
+    private suspend fun onCommandCount(input: List<String>): InputEvent {
         if (input.size < 2) {
-            return Texts.Responses.COUNT_USAGE_ERROR
+            return InputEvent.CommandUsageError(Texts.CommandNames.COUNT)
         }
         val value: String = input[1]
-        val result: CommandResult<String?> = trustore.command(Commands.Count(value))
-
-        return when (result.status) {
-            CommandResult.Status.SUCCESS -> result.value
-            else -> Texts.Responses.operationError(result.error)
-        }
+        val result: CommandResult = trustore.command(Commands.Count(value))
+        return InputEvent.CommandExecuted(Texts.CommandNames.COUNT, result)
     }
 
-    private suspend fun onCommandBegin(): String? {
-        val result: CommandResult<Unit> = trustore.command(Commands.Begin)
-
-        return when (result.status) {
-            CommandResult.Status.SUCCESS -> null
-            else -> Texts.Responses.operationError(result.error)
-        }
+    private suspend fun onCommandBegin(): InputEvent {
+        val result: CommandResult = trustore.command(Commands.Begin)
+        return InputEvent.CommandExecuted(Texts.CommandNames.BEGIN, result)
     }
 
-    private suspend fun onCommandCommit(): String? {
-        val result: CommandResult<Unit> = trustore.command(Commands.Commit)
-
-        return when (result.status) {
-            CommandResult.Status.SUCCESS -> null
-            CommandResult.Status.FAILURE -> Texts.Responses.NO_TRANSACTION_FAILURE
-            CommandResult.Status.ERROR -> Texts.Responses.operationError(result.error)
-        }
+    private suspend fun onCommandCommit(): InputEvent {
+        val result: CommandResult = trustore.command(Commands.Commit)
+        return InputEvent.CommandExecuted(Texts.CommandNames.COMMIT, result)
     }
 
-    private suspend fun onCommandRollback(): String? {
-        val result: CommandResult<Unit> = trustore.command(Commands.Rollback)
+    private suspend fun onCommandRollback(): InputEvent {
+        val result: CommandResult = trustore.command(Commands.Rollback)
+        return InputEvent.CommandExecuted(Texts.CommandNames.ROLLBACK, result)
+    }
 
-        return when (result.status) {
-            CommandResult.Status.SUCCESS -> null
-            CommandResult.Status.FAILURE -> Texts.Responses.NO_TRANSACTION_FAILURE
-            CommandResult.Status.ERROR -> Texts.Responses.operationError(result.error)
-        }
+    private suspend fun onCommandSave(): InputEvent {
+        val result: CommandResult = trustore.command(CustomCommands.Save(backupStorage))
+        return InputEvent.CommandExecuted(Texts.CommandNames.SAVE, result)
+    }
+
+    private suspend fun onCommandClear(): InputEvent {
+        val result: CommandResult = trustore.command(CustomCommands.Clear)
+        return InputEvent.CommandExecuted(Texts.CommandNames.CLEAR, result)
+    }
+
+    private suspend fun onCommandRestore(): InputEvent {
+        val result: CommandResult = trustore.command(CustomCommands.Restore(backupStorage))
+        return InputEvent.CommandExecuted(Texts.CommandNames.RESTORE, result)
+    }
+
+    private suspend fun onCommandDrop(): InputEvent {
+        val result: CommandResult = CustomCommands.Drop.execute(backupStorage)
+        return InputEvent.CommandExecuted(Texts.CommandNames.DROP, result)
     }
 }
