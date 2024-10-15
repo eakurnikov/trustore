@@ -4,7 +4,6 @@ interface Store {
     val withReadAccess: Read
     val withWriteAccess: Write
 
-    suspend fun snapshot(): Snapshot
     suspend fun applySnapshot(snapshot: Snapshot)
 
     interface Read {

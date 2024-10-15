@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Backup(
-    val map: Map<String, String>
+    val content: Map<String, String>
 )

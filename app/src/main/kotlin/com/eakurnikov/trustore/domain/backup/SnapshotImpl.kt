@@ -2,13 +2,13 @@ package com.eakurnikov.trustore.domain.backup
 
 import com.eakurnikov.trustore.api.Store
 
-class BackupSnapshot(
+class SnapshotImpl(
     override val content: Map<String, String>
 ) : Store.Snapshot {
 
     override fun set(key: String, value: String): Store.Snapshot {
         val newMap: Map<String, String> = HashMap(content).apply { put(key, value) }
-        return BackupSnapshot(newMap)
+        return SnapshotImpl(newMap)
     }
 
     override fun get(key: String): String? {
@@ -17,7 +17,7 @@ class BackupSnapshot(
 
     override fun delete(key: String): Store.Snapshot {
         val newMap: Map<String, String> = HashMap(content).apply { remove(key) }
-        return BackupSnapshot(newMap)
+        return SnapshotImpl(newMap)
     }
 
     override fun count(value: String): Int {

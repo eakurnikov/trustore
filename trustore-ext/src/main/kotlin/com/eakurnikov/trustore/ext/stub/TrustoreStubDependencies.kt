@@ -27,6 +27,7 @@ class TrustoreStubDependencies : Trustore.Dependencies {
         private val storeReadStub: Store.Read = object : Store.Read {
             override suspend fun get(key: String): String? = null
             override suspend fun count(value: String): Int = 0
+            override suspend fun snapshot(): Store.Snapshot = storeSnapshotStub
         }
 
         private val storeWriteStub: Store.Write = object : Store.Write, Store.Read by storeReadStub {
@@ -37,7 +38,6 @@ class TrustoreStubDependencies : Trustore.Dependencies {
         override val withReadAccess: Store.Read = storeReadStub
         override val withWriteAccess: Store.Write = storeWriteStub
 
-        override suspend fun snapshot(): Store.Snapshot = storeSnapshotStub
         override suspend fun applySnapshot(snapshot: Store.Snapshot) = Unit
     }
 

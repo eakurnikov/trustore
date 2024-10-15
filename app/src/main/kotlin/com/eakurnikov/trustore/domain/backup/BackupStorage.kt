@@ -7,14 +7,23 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.Dispatchers
 import java.io.File
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class BackupStorage @Inject constructor(
+interface BackupStorage {
+    suspend fun saveBackup(snapshot: SnapshotImpl): Result<Unit>
+    suspend fun retrieveBackup(): Result<SnapshotImpl?>
+    suspend fun dropBackup(): Result<Boolean>
+}
+
+@Singleton
+class BackupStorageImpl @Inject constructor(
     private val context: Context
-) {
+) : BackupStorage {
+
     private val backupFile: File
         get() = File(context.filesDir, BACKUP_FILE_NAME)
 
-    suspend fun saveBackup(snapshot: BackupSnapshot): Result<Unit> {
+    override suspend fun saveBackup(snapshot: SnapshotImpl): Result<Unit> {
         return withContext(Dispatchers.IO) {
             runCatching {
                 val backup = Backup(snapshot.content)
@@ -24,7 +33,7 @@ class BackupStorage @Inject constructor(
         }
     }
 
-    suspend fun restoreBackup(): Result<BackupSnapshot?> {
+    override suspend fun retrieveBackup(): Result<SnapshotImpl?> {
         return withContext(Dispatchers.IO) {
             if (!backupFile.exists()) {
                 return@withContext Result.success(null)
@@ -32,8 +41,14 @@ class BackupStorage @Inject constructor(
             runCatching {
                 val jsonString: String = backupFile.readText()
                 val backup: Backup = Json.decodeFromString<Backup>(jsonString)
-                BackupSnapshot(backup.map)
+                SnapshotImpl(backup.content)
             }
+        }
+    }
+
+    override suspend fun dropBackup(): Result<Boolean> {
+        return withContext(Dispatchers.IO) {
+            runCatching { backupFile.delete() }
         }
     }
 
