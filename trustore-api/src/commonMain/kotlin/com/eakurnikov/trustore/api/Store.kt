@@ -5,6 +5,7 @@ interface Store {
     val withWriteAccess: Write
 
     suspend fun snapshot(): Snapshot
+    suspend fun applySnapshot(snapshot: Snapshot)
 
     interface Read {
         suspend fun get(key: String): String?
@@ -14,7 +15,6 @@ interface Store {
     interface Write : Read {
         suspend fun set(key: String, value: String)
         suspend fun delete(key: String)
-        suspend fun applySnapshot(snapshot: Snapshot)
     }
 
     interface Snapshot {

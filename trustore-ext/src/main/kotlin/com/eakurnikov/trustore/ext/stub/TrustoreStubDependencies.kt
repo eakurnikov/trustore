@@ -8,6 +8,7 @@ class TrustoreStubDependencies : Trustore.Dependencies {
 
     private val transactionsStub: Transactions = object : Transactions {
         override suspend fun begin(): Boolean = false
+        override suspend fun applySnapshot(snapshot: Store.Snapshot): Boolean = false
         override suspend fun commit(): Boolean = false
         override suspend fun rollback(): Boolean = false
         override suspend fun isInTransaction(): Boolean = false
@@ -23,7 +24,6 @@ class TrustoreStubDependencies : Trustore.Dependencies {
         private val storeWriteStub: Store.Write = object : Store.Write, Store.Read by storeReadStub {
             override suspend fun set(key: String, value: String) = Unit
             override suspend fun delete(key: String) = Unit
-            override suspend fun applySnapshot(snapshot: Store.Snapshot) = Unit
         }
 
         private val storeSnapshotStub = object : Store.Snapshot {
@@ -37,6 +37,7 @@ class TrustoreStubDependencies : Trustore.Dependencies {
         override val withWriteAccess: Store.Write = storeWriteStub
 
         override suspend fun snapshot(): Store.Snapshot = storeSnapshotStub
+        override suspend fun applySnapshot(snapshot: Store.Snapshot) = Unit
     }
 
     override fun store(): Store = storeStub

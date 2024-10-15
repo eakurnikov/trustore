@@ -17,8 +17,16 @@ internal class TransactionsImpl(
         return Transaction(store.snapshot()).let(stack::add)
     }
 
+    override suspend fun applySnapshot(snapshot: Store.Snapshot): Boolean {
+        if (isInTransaction()) {
+            return false
+        }
+        store.applySnapshot(snapshot)
+        return true
+    }
+
     override suspend fun commit(): Boolean {
-        if (stack.isEmpty()) {
+        if (!isInTransaction()) {
             return false
         }
         popCurrentTransaction()
@@ -26,10 +34,10 @@ internal class TransactionsImpl(
     }
 
     override suspend fun rollback(): Boolean {
-        if (stack.isEmpty()) {
+        if (!isInTransaction()) {
             return false
         }
-        store.withWriteAccess.applySnapshot(popCurrentTransaction().backup)
+        store.applySnapshot(popCurrentTransaction().backup)
         return true
     }
 
