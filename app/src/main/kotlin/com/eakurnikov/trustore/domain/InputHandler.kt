@@ -21,7 +21,11 @@ class InputHandler @Inject constructor(
             Texts.CommandNames.BEGIN -> onCommandBegin()
             Texts.CommandNames.COMMIT -> onCommandCommit()
             Texts.CommandNames.ROLLBACK -> onCommandRollback()
-            else -> Texts.Responses.unknownCommandError(command)
+            Texts.CommandNames.SAVE -> onCommandSave()
+            Texts.CommandNames.CLEAR -> onCommandClear()
+            Texts.CommandNames.RESTORE -> onCommandRestore()
+            Texts.CommandNames.DROP -> onCommandDrop()
+            else -> InputEvent.CommandUnknown(command)
         }
     }
 
