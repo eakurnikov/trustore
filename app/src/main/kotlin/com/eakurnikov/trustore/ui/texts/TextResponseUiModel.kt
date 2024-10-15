@@ -32,6 +32,7 @@ object TextResponseUiModel {
 
     private fun BackupEvent.Restore.mapToText(): String = when (this) {
         BackupEvent.Restore.Success -> Texts.BackupEvents.RESTORE_SUCCESS
+        BackupEvent.Restore.Restricted -> Texts.BackupEvents.OPERATION_RESTRICTED
         BackupEvent.Restore.Failure -> Texts.BackupEvents.RESTORE_FAILURE
         is BackupEvent.Restore.Error -> Texts.Responses.operationError(error, Texts.BackupEvents.RESTORE_ERROR)
     }

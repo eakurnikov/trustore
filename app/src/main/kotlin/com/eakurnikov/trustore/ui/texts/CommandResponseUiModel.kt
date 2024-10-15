@@ -2,6 +2,7 @@ package com.eakurnikov.trustore.ui.texts
 
 import com.eakurnikov.trustore.api.CommandResult
 import com.eakurnikov.trustore.domain.InputEvent
+import com.eakurnikov.trustore.domain.backup.BackupEvent
 
 object CommandResponseUiModel {
 
@@ -60,7 +61,8 @@ object CommandResponseUiModel {
 
     private fun CommandResult.mapClearToText(): String = when (status) {
         CommandResult.Status.SUCCESS -> Texts.BackupEvents.CLEAR_SUCCESS
-        else -> Texts.Responses.operationError(error, Texts.BackupEvents.CLEAR_ERROR)
+        CommandResult.Status.FAILURE -> Texts.BackupEvents.OPERATION_RESTRICTED
+        CommandResult.Status.ERROR -> Texts.Responses.operationError(error, Texts.BackupEvents.CLEAR_ERROR)
     }
 
     private fun CommandResult.mapSaveToText(): String = when (status) {
@@ -68,10 +70,22 @@ object CommandResponseUiModel {
         else -> Texts.Responses.operationError(error, Texts.BackupEvents.SAVE_ERROR)
     }
 
-    private fun CommandResult.mapRestoreToText(): String = when (status) {
-        CommandResult.Status.SUCCESS -> Texts.BackupEvents.RESTORE_SUCCESS
-        CommandResult.Status.FAILURE -> Texts.BackupEvents.RESTORE_FAILURE
-        CommandResult.Status.ERROR -> Texts.Responses.operationError(error, Texts.BackupEvents.RESTORE_ERROR)
+    private fun CommandResult.mapRestoreToText(): String? = when (status) {
+        CommandResult.Status.SUCCESS -> {
+            Texts.BackupEvents.RESTORE_SUCCESS
+        }
+
+        CommandResult.Status.FAILURE -> {
+            when (value) {
+                BackupEvent.Restore.Restricted -> Texts.BackupEvents.OPERATION_RESTRICTED
+                BackupEvent.Restore.Failure -> Texts.BackupEvents.RESTORE_FAILURE
+                else -> null
+            }
+        }
+
+        CommandResult.Status.ERROR -> {
+            Texts.Responses.operationError(error, Texts.BackupEvents.RESTORE_ERROR)
+        }
     }
 
     private fun CommandResult.mapDropToText(): String = when (status) {

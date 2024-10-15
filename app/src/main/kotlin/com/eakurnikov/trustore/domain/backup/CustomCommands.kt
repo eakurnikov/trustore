@@ -1,9 +1,10 @@
 package com.eakurnikov.trustore.domain.backup
 
 import com.eakurnikov.trustore.api.CommandResult
+import com.eakurnikov.trustore.api.ControlCommand
 import com.eakurnikov.trustore.api.ReadCommand
 import com.eakurnikov.trustore.api.Store
-import com.eakurnikov.trustore.api.WriteCommand
+import com.eakurnikov.trustore.api.Transactions
 
 object CustomCommands {
 
@@ -27,16 +28,24 @@ object CustomCommands {
 
     class SetSnapshot(
         private val snapshot: SnapshotImpl
-    ) : WriteCommand {
+    ) : ControlCommand {
 
-        override suspend fun execute(store: Store.Write): CommandResult {
+        override suspend fun execute(transactions: Transactions): CommandResult {
             return try {
-                store.applySnapshot(SnapshotImpl(snapshot.content))
-                CommandResult(
-                    status = CommandResult.Status.SUCCESS,
-                    value = Unit,
-                    error = null
-                )
+                val result: Boolean = transactions.applySnapshot(SnapshotImpl(snapshot.content))
+                if (result) {
+                    CommandResult(
+                        status = CommandResult.Status.SUCCESS,
+                        value = Unit,
+                        error = null
+                    )
+                } else {
+                    CommandResult(
+                        status = CommandResult.Status.FAILURE,
+                        value = null,
+                        error = null
+                    )
+                }
             } catch (e: Throwable) {
                 CommandResult(
                     status = CommandResult.Status.ERROR,
@@ -47,7 +56,7 @@ object CustomCommands {
         }
     }
 
-    object Clear : WriteCommand by SetSnapshot(SnapshotImpl(emptyMap()))
+    object Clear : ControlCommand by SetSnapshot(SnapshotImpl(emptyMap()))
 
     class Save(
         private val backupStorage: BackupStorage
@@ -90,9 +99,9 @@ object CustomCommands {
 
     class Restore(
         private val backupStorage: BackupStorage
-    ) : WriteCommand {
+    ) : ControlCommand {
 
-        override suspend fun execute(store: Store.Write): CommandResult {
+        override suspend fun execute(transactions: Transactions): CommandResult {
             val retrieveResult: Result<SnapshotImpl?> = backupStorage.retrieveBackup()
 
             if (retrieveResult.isFailure) {
@@ -106,24 +115,36 @@ object CustomCommands {
             val restoredBackup: SnapshotImpl = retrieveResult.getOrNull()
                 ?: return CommandResult(
                     status = CommandResult.Status.FAILURE,
-                    value = null,
+                    value = BackupEvent.Restore.Failure,
                     error = null
                 )
 
-            val setResult: CommandResult = SetSnapshot(restoredBackup).execute(store)
+            val setResult: CommandResult = SetSnapshot(restoredBackup).execute(transactions)
 
             return when (setResult.status) {
-                CommandResult.Status.SUCCESS -> CommandResult(
-                    status = CommandResult.Status.SUCCESS,
-                    value = BackupEvent.Restore.Success,
-                    error = null
-                )
+                CommandResult.Status.SUCCESS -> {
+                    CommandResult(
+                        status = CommandResult.Status.SUCCESS,
+                        value = Unit,
+                        error = null
+                    )
+                }
 
-                else -> CommandResult(
-                    status = CommandResult.Status.ERROR,
-                    value = null,
-                    error = setResult.error
-                )
+                CommandResult.Status.FAILURE -> {
+                    CommandResult(
+                        status = CommandResult.Status.FAILURE,
+                        value = BackupEvent.Restore.Restricted,
+                        error = null
+                    )
+                }
+
+                else -> {
+                    CommandResult(
+                        status = CommandResult.Status.ERROR,
+                        value = null,
+                        error = setResult.error
+                    )
+                }
             }
         }
     }

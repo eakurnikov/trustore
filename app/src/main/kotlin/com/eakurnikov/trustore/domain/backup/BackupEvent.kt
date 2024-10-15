@@ -5,6 +5,7 @@ sealed interface BackupEvent {
     sealed interface Restore : BackupEvent {
         data object Success : Restore
         data object Failure : Restore
+        data object Restricted : Restore
         data class Error(val error: Throwable?) : Restore
     }
 

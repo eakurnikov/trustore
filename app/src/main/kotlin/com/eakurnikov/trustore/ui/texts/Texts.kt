@@ -44,6 +44,7 @@ object Texts {
     }
 
     object BackupEvents {
+        const val OPERATION_RESTRICTED = "Operation not allowed during transaction"
         const val CLEAR_SUCCESS = "Storage cleared successfully"
         const val CLEAR_ERROR = "Failed to clear storage"
         const val SAVE_SUCCESS = "Backup saved successfully"

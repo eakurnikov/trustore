@@ -32,9 +32,20 @@ class BackupManagerImpl @Inject constructor(
         backupScope.launch {
             val result: CommandResult = trustore.command(CustomCommands.Restore(backupStorage))
             when (result.status) {
-                CommandResult.Status.SUCCESS -> mutableEvents.emit(BackupEvent.Restore.Success)
-                CommandResult.Status.FAILURE -> mutableEvents.emit(BackupEvent.Restore.Failure)
-                CommandResult.Status.ERROR -> mutableEvents.emit(BackupEvent.Restore.Error(result.error))
+                CommandResult.Status.SUCCESS -> {
+                    mutableEvents.emit(BackupEvent.Restore.Success)
+                }
+
+                CommandResult.Status.FAILURE -> {
+                    when (result.value) {
+                        BackupEvent.Restore.Restricted -> mutableEvents.emit(BackupEvent.Restore.Restricted)
+                        BackupEvent.Restore.Failure -> mutableEvents.emit(BackupEvent.Restore.Failure)
+                    }
+                }
+
+                CommandResult.Status.ERROR -> {
+                    mutableEvents.emit(BackupEvent.Restore.Error(result.error))
+                }
             }
         }
     }
