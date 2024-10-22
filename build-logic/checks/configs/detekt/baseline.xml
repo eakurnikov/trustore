@@ -35,8 +35,19 @@
     <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when multiple transactions are active - then rollback affects only the current one`()</ID>
     <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when rollback is called with active transaction - then state is restored to previous snapshot`()</ID>
     <ID>FunctionNaming:TransactionsImplTest.kt$TransactionsImplTest$@Test fun `when rollback is called with no transactions - then returns false`()</ID>
+    <ID>FunctionNaming:TrustoreImplTest.kt$TrustoreImplTest$@Test fun `when a write fails then subsequent operations continue normally`()</ID>
+    <ID>FunctionNaming:TrustoreImplTest.kt$TrustoreImplTest$@Test fun `when concurrent reads and writes then writes are blocked until reads complete`()</ID>
+    <ID>FunctionNaming:TrustoreImplTest.kt$TrustoreImplTest$@Test fun `when mixed read and write commands then no deadlock occurs`()</ID>
+    <ID>FunctionNaming:TrustoreImplTest.kt$TrustoreImplTest$@Test fun `when multiple concurrent reads then they succeed concurrently`()</ID>
+    <ID>FunctionNaming:TrustoreImplTest.kt$TrustoreImplTest$@Test fun `when multiple writes happen then they execute one after another`()</ID>
+    <ID>FunctionNaming:TrustoreImplTest.kt$TrustoreImplTest$@Test fun `when write happens then reads are blocked until the write completes`()</ID>
+    <ID>FunctionNaming:TrustoreImplTest.kt$TrustoreImplTest$@Test fun `when write occurs then subsequent reads wait until write is done`()</ID>
     <ID>MagicNumber:InputHandler.kt$InputHandler$3</ID>
     <ID>MagicNumber:StoreImplTest.kt$StoreImplTest$3</ID>
+    <ID>MagicNumber:TrustoreImplTest.kt$TrustoreImplTest$100</ID>
+    <ID>MagicNumber:TrustoreImplTest.kt$TrustoreImplTest$200</ID>
+    <ID>MagicNumber:TrustoreImplTest.kt$TrustoreImplTest$500</ID>
+    <ID>TooGenericExceptionThrown:TrustoreImplTest.kt$TrustoreImplTest$throw RuntimeException()</ID>
     <ID>UnusedPrivateProperty:build.gradle.kts$val commonMain by getting { dependencies { implementation(projects.trustoreApi) implementation(libs.kotlin.coroutines.core) implementation(libs.kotlin.collections.immutable) } }</ID>
     <ID>UnusedPrivateProperty:build.gradle.kts$val commonTest by getting { dependencies { implementation(libs.test.kotlin) implementation(libs.test.kotlin.coroutines) } }</ID>
     <ID>UnusedPrivateProperty:convention.kotlin-multiplatform-library.gradle.kts$val commonMain by getting</ID>
