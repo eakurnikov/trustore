@@ -4,6 +4,7 @@ import com.eakurnikov.trustore.api.CommandResult
 import com.eakurnikov.trustore.api.ControlCommand
 import com.eakurnikov.trustore.api.ReadCommand
 import com.eakurnikov.trustore.api.WriteCommand
+import com.eakurnikov.trustore.impl.util.assertFailure
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -59,7 +60,7 @@ class CommandsTest {
         assertNull(Commands.Get("bar")().value)
         assertEquals("456", Commands.Get("foo")().value)
 
-        assertEquals(CommandResult.Status.FAILURE, Commands.Rollback().status) // No active transaction to rollback
+        assertFailure(Commands.Rollback()) // No active transaction to rollback
     }
 
     @Test
@@ -79,7 +80,7 @@ class CommandsTest {
         assertEquals("123", Commands.Get("foo")().value)
         assertEquals("abc", Commands.Get("bar")().value)
 
-        assertEquals(CommandResult.Status.FAILURE, Commands.Commit().status) // No active transaction to commit
+        assertFailure(Commands.Commit()) // No active transaction to commit
     }
 
     @Test
