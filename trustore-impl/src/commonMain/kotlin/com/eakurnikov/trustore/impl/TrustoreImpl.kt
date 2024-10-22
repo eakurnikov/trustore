@@ -16,10 +16,12 @@ internal class TrustoreImpl(
     private val transactions: Transactions
 ) : Trustore {
 
-    private val mutex = Mutex()
+    private val writeMutex = Mutex()
+    private val readMutex = Mutex()
+    private var readersCounter = 0
 
     override suspend fun command(command: ControlCommand): CommandResult {
-        return mutex.withLock {
+        return writeMutex.withLock {
             safeExecute {
                 command.execute(transactions)
             }
@@ -27,15 +29,26 @@ internal class TrustoreImpl(
     }
 
     override suspend fun command(command: ReadCommand): CommandResult {
-        return mutex.withLock {
-            safeExecute {
-                command.execute(store.withReadAccess)
+        readMutex.withLock {
+            if (readersCounter == 0) {
+                writeMutex.lock()
+            }
+            readersCounter++
+        }
+        val result: CommandResult = safeExecute {
+            command.execute(store.withReadAccess)
+        }
+        readMutex.withLock {
+            readersCounter--
+            if (readersCounter == 0) {
+                writeMutex.unlock()
             }
         }
+        return result
     }
 
     override suspend fun command(command: WriteCommand): CommandResult {
-        return mutex.withLock {
+        return writeMutex.withLock {
             safeExecute {
                 command.execute(store.withWriteAccess)
             }
