@@ -37,11 +37,11 @@ class TransactionsImplTest {
         // Given
         store.withWriteAccess.set("foo", "bar")
         val command = object : ReadCommand {
-            override suspend fun execute(store: Store.Read): CommandResult<String?> = success(store.get("foo"))
+            override suspend fun execute(store: Store.Read): CommandResult = success(store.get("foo"))
         }
 
         // When
-        val result: CommandResult<String?> = command.execute(store.withReadAccess)
+        val result: CommandResult = command.execute(store.withReadAccess)
 
         // Then
         assertEquals("bar", result.value)
@@ -51,7 +51,7 @@ class TransactionsImplTest {
     fun `when command is executed with write access - then store state is updated`() = runTest {
         // Given
         val command = object : WriteCommand {
-            override suspend fun execute(store: Store.Write): CommandResult<Unit> {
+            override suspend fun execute(store: Store.Write): CommandResult {
                 return success(store.set("foo", "bar"))
             }
         }

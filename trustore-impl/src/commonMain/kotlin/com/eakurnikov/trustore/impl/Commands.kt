@@ -55,7 +55,7 @@ object Commands {
     ) : ReadCommand {
 
         override suspend fun execute(store: Store.Read): CommandResult {
-            return success(store.count(value).toString())
+            return store.count(value).toString().let(::success)
         }
     }
 
@@ -64,7 +64,7 @@ object Commands {
     ) : WriteCommand {
 
         override suspend fun execute(store: Store.Write): CommandResult {
-            return success(store.delete(key))
+            return store.delete(key).let(::success)
         }
     }
 
@@ -74,7 +74,7 @@ object Commands {
     ) : WriteCommand {
 
         override suspend fun execute(store: Store.Write): CommandResult {
-            return success(store.set(key, value))
+            return store.set(key, value).let(::success)
         }
     }
 }
