@@ -14,7 +14,7 @@ internal class TransactionsImpl(
     private val stack: MutableList<Transaction> = arrayListOf()
 
     override suspend fun begin(): Boolean {
-        return Transaction(store.snapshot()).let(stack::add)
+        return Transaction(store.withReadAccess.snapshot()).let(stack::add)
     }
 
     override suspend fun applySnapshot(snapshot: Store.Snapshot): Boolean {

@@ -7,6 +7,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import com.eakurnikov.trustore.ui.texts.Texts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

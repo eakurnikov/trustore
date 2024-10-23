@@ -3,25 +3,19 @@ package com.eakurnikov.trustore.impl.util
 import com.eakurnikov.trustore.api.CommandResult
 import com.eakurnikov.trustore.api.CommandResult.Status
 
-internal inline fun <T> success(value: T) = CommandResult(
+internal inline fun success(value: Any? = Unit) = CommandResult(
     status = Status.SUCCESS,
     value = value,
     error = null
 )
 
-internal inline fun success() = CommandResult(
-    status = Status.SUCCESS,
-    value = Unit,
-    error = null
-)
-
-internal inline fun <T> failure() = CommandResult<T>(
+internal inline fun failure() = CommandResult(
     status = Status.FAILURE,
     value = null,
     error = null
 )
 
-internal inline fun <T> error(error: Throwable) = CommandResult<T>(
+internal inline fun error(error: Throwable) = CommandResult(
     status = Status.ERROR,
     value = null,
     error = error

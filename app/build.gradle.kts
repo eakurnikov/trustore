@@ -1,5 +1,6 @@
 plugins {
     id("convention.android-app")
+    alias(libs.plugins.kotlin.serialization)
     id("kotlin-kapt")
 }
 
@@ -17,6 +18,9 @@ dependencies {
     implementation(projects.trustoreApi)
     implementation(projects.trustoreImpl)
     implementation(projects.trustoreExt)
+
+    implementation(libs.kotlin.coroutines.core)
+    implementation(libs.kotlin.serialization.json)
 
     implementation(platform(libs.androidx.compose.bom))
 

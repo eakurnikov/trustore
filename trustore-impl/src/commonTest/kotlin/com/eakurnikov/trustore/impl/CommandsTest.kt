@@ -113,7 +113,7 @@ class CommandsTest {
         assertEquals("123", Commands.Get("foo")().value)
     }
 
-    private suspend operator fun ControlCommand.invoke(): CommandResult<Unit> = execute(transactions)
-    private suspend operator fun ReadCommand.invoke(): CommandResult<String?> = execute(store.withReadAccess)
-    private suspend operator fun WriteCommand.invoke(): CommandResult<Unit> = execute(store.withWriteAccess)
+    private suspend operator fun ControlCommand.invoke(): CommandResult = execute(transactions)
+    private suspend operator fun ReadCommand.invoke(): CommandResult = execute(store.withReadAccess)
+    private suspend operator fun WriteCommand.invoke(): CommandResult = execute(store.withWriteAccess)
 }

@@ -8,6 +8,7 @@ android-minSdk = "25"
 kotlin = "2.0.20"
 kotlin-coroutines = "1.9.0"
 kotlin-collections-immutable = "0.3.8"
+kotlin-serialization = "1.7.3"
 
 android-gradlePlugin = "8.7.1"
 android-cacheFix-gradlePlugin = "3.0.1"
@@ -33,6 +34,8 @@ kotlin-compose-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-
 kotlin-serialization-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
 kotlin-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlin-collections-immutable" }
+kotlin-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlin-serialization" }
+kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin-serialization" }
 
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android-gradlePlugin" }
 android-cacheFix-gradlePlugin = { module = "org.gradle.android.cache-fix:org.gradle.android.cache-fix.gradle.plugin", version.ref = "android-cacheFix-gradlePlugin" }
@@ -70,4 +73,5 @@ test-kotlin-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version
 android-application = { id = "com.android.application", version.ref = "android-gradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
