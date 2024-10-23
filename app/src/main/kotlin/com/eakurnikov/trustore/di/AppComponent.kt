@@ -12,6 +12,7 @@ import javax.inject.Singleton
         AppModule::class,
         BackupModule::class,
         ViewModelModule::class,
+        ErrorHandlingModule::class,
         TrustoreModule::class
     ]
 )
