@@ -19,6 +19,9 @@ class TrustoreApp : Application() {
     @Inject
     lateinit var backupManager: BackupManager
 
+    @Inject
+    lateinit var uncaughtExceptionHandler: Thread.UncaughtExceptionHandler
+
     override fun onCreate() {
         super.onCreate()
 
@@ -28,9 +31,11 @@ class TrustoreApp : Application() {
             .build()
             .apply { inject(this@TrustoreApp) }
 
+        Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler)
         backupManager.onInit()
 
-        forceOnTrimMemory()
+//        forceOnTrimMemory()
+//        forceOutOfMemory()
     }
 
     override fun onTrimMemory(level: Int) {
@@ -44,6 +49,13 @@ class TrustoreApp : Application() {
         Handler(Looper.getMainLooper()).postDelayed(
             { onTrimMemory(ComponentCallbacks2.TRIM_MEMORY_BACKGROUND) },
             15_000
+        )
+    }
+
+    private fun forceOutOfMemory() {
+        Handler(Looper.getMainLooper()).postDelayed(
+            { throw OutOfMemoryError() },
+            20_000
         )
     }
 }
