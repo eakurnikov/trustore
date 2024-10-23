@@ -27,6 +27,7 @@ class TrustoreStubDependencies : Trustore.Dependencies {
         }
 
         private val storeSnapshotStub = object : Store.Snapshot {
+            override val content: Map<String, String> = emptyMap()
             override fun set(key: String, value: String): Store.Snapshot = this
             override fun get(key: String): String? = null
             override fun delete(key: String): Store.Snapshot = this
