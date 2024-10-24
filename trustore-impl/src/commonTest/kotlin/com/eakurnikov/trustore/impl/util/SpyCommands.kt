@@ -15,7 +15,7 @@ object SpyCommands {
         private val onExecute: (() -> Unit)? = null
     ) : ReadCommand {
 
-        override suspend fun execute(store: Store.Read): CommandResult<String?> {
+        override suspend fun execute(store: Store.Read): CommandResult {
             delay(delayMs)
             onExecute?.invoke()
             return success("")
@@ -27,7 +27,7 @@ object SpyCommands {
         private val onExecute: (() -> Unit)? = null
     ) : WriteCommand {
 
-        override suspend fun execute(store: Store.Write): CommandResult<Unit> {
+        override suspend fun execute(store: Store.Write): CommandResult {
             delay(delayMs)
             onExecute?.invoke()
             return success()
@@ -38,7 +38,7 @@ object SpyCommands {
         private val delayMs: Long
     ) : ControlCommand {
 
-        override suspend fun execute(transactions: Transactions): CommandResult<Unit> {
+        override suspend fun execute(transactions: Transactions): CommandResult {
             delay(delayMs)
             return success()
         }

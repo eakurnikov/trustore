@@ -42,10 +42,10 @@ class TrustoreImplTest {
         }
 
         // When: Both reads are executed concurrently
-        val readResult1: Deferred<CommandResult<String?>> = async {
+        val readResult1: Deferred<CommandResult> = async {
             trustore.command(readCommand1)
         }
-        val readResult2: Deferred<CommandResult<String?>> = async {
+        val readResult2: Deferred<CommandResult> = async {
             trustore.command(readCommand2)
         }
 
@@ -71,10 +71,10 @@ class TrustoreImplTest {
         }
 
         // When: Execute the write command and then the read command
-        val writeResult: Deferred<CommandResult<Unit>> = async {
+        val writeResult: Deferred<CommandResult> = async {
             trustore.command(writeCommand)
         }
-        val readResult: Deferred<CommandResult<String?>> = async {
+        val readResult: Deferred<CommandResult> = async {
             delay(100)
             trustore.command(readCommand)
         }
@@ -100,10 +100,10 @@ class TrustoreImplTest {
         }
 
         // When: A read is started, followed by a write
-        val readResult: Deferred<CommandResult<String?>> = async {
+        val readResult: Deferred<CommandResult> = async {
             trustore.command(readCommand)
         }
-        val writeResult: Deferred<CommandResult<Unit>> = async {
+        val writeResult: Deferred<CommandResult> = async {
             delay(100)
             trustore.command(writeCommand)
         }
@@ -129,10 +129,10 @@ class TrustoreImplTest {
         }
 
         // When: Both writes are executed concurrently
-        val writeResult1: Deferred<CommandResult<Unit>> = async {
+        val writeResult1: Deferred<CommandResult> = async {
             trustore.command(writeCommand1)
         }
-        val writeResult2: Deferred<CommandResult<Unit>> = async {
+        val writeResult2: Deferred<CommandResult> = async {
             delay(100)
             trustore.command(writeCommand2)
         }
@@ -164,14 +164,14 @@ class TrustoreImplTest {
         }
 
         // When: Write command is started, followed by multiple reads
-        val writeResult: Deferred<CommandResult<Unit>> = async {
+        val writeResult: Deferred<CommandResult> = async {
             trustore.command(writeCommand)
         }
-        val readResult1: Deferred<CommandResult<String?>> = async {
+        val readResult1: Deferred<CommandResult> = async {
             delay(100)
             trustore.command(readCommand1)
         }
-        val readResult2: Deferred<CommandResult<String?>> = async {
+        val readResult2: Deferred<CommandResult> = async {
             delay(200)
             trustore.command(readCommand2)
         }
@@ -204,14 +204,14 @@ class TrustoreImplTest {
         }
 
         // When: A read is started, followed by a write and another read
-        val readResult1: Deferred<CommandResult<String?>> = async {
+        val readResult1: Deferred<CommandResult> = async {
             trustore.command(readCommand1)
         }
-        val writeResult: Deferred<CommandResult<Unit>> = async {
+        val writeResult: Deferred<CommandResult> = async {
             delay(100)
             trustore.command(writeCommand)
         }
-        val readResult2: Deferred<CommandResult<String?>> = async {
+        val readResult2: Deferred<CommandResult> = async {
             delay(200)
             trustore.command(readCommand2)
         }
@@ -238,10 +238,10 @@ class TrustoreImplTest {
         }
 
         // When: The write fails, and a read is executed afterward
-        val writeResult: Deferred<CommandResult<Unit>> = async {
+        val writeResult: Deferred<CommandResult> = async {
             trustore.command(failingWriteCommand)
         }
-        val readResult: Deferred<CommandResult<String?>> = async {
+        val readResult: Deferred<CommandResult> = async {
             delay(100)
             trustore.command(readCommand)
         }
